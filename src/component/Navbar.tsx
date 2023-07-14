@@ -1,24 +1,22 @@
+import { auth } from '@/libs/firebase';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { setUser } from '@/redux/sliceReducers/userSliceReducer';
+import { signOut } from 'firebase/auth';
 import {Link} from 'react-router-dom'
-
-interface NavigateRouteType{
-    name: string;
-    path: string;
-}
+ 
 export default function TopNavBar() {
-    const navigationRoute:NavigateRouteType[] = [
-        {
-            name: "Books",
-            path: "/allBooks"
-        },
-        {
-            name: "Login",
-            path: "/login"
-        },
-        {
-            name: "SignUp",
-            path: "/signUp"
-        },
-    ]
+    const { user } = useAppSelector((state) => state.user);
+    const dispatch = useAppDispatch();
+
+    const handleLogout =  () => { 
+       signOut(auth).then(() => {
+        console.log('first')
+        dispatch(setUser(null));
+      }).catch((err: any)=>{
+        console.log(err)
+      })
+    }; 
+
   return (
     <div> 
         <div className="navbar bg-purple-500">
@@ -27,12 +25,13 @@ export default function TopNavBar() {
   </div>
   <div className="flex-none text-white text-4xl">
     <ul className="menu menu-horizontal mr-6 px-1">
-     <div >
-     {
-            navigationRoute.map((navigate: NavigateRouteType)=>{
-                return <Link className='ml-4 text-xl' to={navigate.path}>{navigate.name}</Link>
-            })
-           }
+     <div>
+        {
+            user.email ? 
+            <button onClick={handleLogout} className='ml-4 text-xl'>LogOut</button> : 
+            <> <Link className='ml-4 text-xl' to={"/login"}>Login</Link>
+            <Link className='ml-4 text-xl' to={"/signUp"}>SignUp</Link></>
+        }  
      </div> 
     </ul>
   </div>

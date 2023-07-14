@@ -1,18 +1,22 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import TopNavBar from "@/component/Navbar";
+import { useAppDispatch } from "@/redux/hook";
+import { userCreate } from "@/redux/sliceReducers/userSliceReducer";
 import {Link} from "react-router-dom"
 
  
 export default function SignUp() {
+    const dispatch = useAppDispatch()
     const SubmitForm = (event: any) =>{
         event?.preventDefault()
         const email = event.target.email.value;
         const password = event.target.password.value;
         const confirmPassword = event.target.confirmPassword.value;
-        
-        console.log('signUp data', email,password,confirmPassword,event)
+         
+    dispatch(userCreate({email: email,password: password}))
     }
   return (
    <>
