@@ -24,7 +24,7 @@ const initialState: IUserStateType = {
 
 export const userCreate = createAsyncThunk("user/userCreate",
     async ({ email, password }: { email: string, password: string }) => {
-        const data = await createUserWithEmailAndPassword(auth, email, password);
+        const data = await createUserWithEmailAndPassword(auth, email, password); 
         return data.user.email
     }
 );

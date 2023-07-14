@@ -6,21 +6,53 @@ import {useEffect} from "react";
 import TopNavBar from "@/component/Navbar";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { loginUser } from "@/redux/sliceReducers/userSliceReducer";
-import {Link,useNavigate} from "react-router-dom"
+import {Link,useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
  
 export default function Login() {
     const dispatch = useAppDispatch(); 
   const { user, isLoading } = useAppSelector((state) => state.user); 
+  const {error} = useAppSelector(state=>state.user);
 
   const navigate = useNavigate(); 
+
+    useEffect(() => {
+        if(error){
+            if(error === "Firebase: Error (auth/user-not-found)."){
+                toast.error('First Create Account. This User Not Found', {
+                    position: "top-right",
+                    autoClose: 10000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                    }); 
+        }else if(error === "Firebase: Error (auth/wrong-password)."){
+            toast.error('Your Password Is Incorrect', {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                }); 
+        }
+     }
+    }, [error])
+    
+
 
   useEffect(() => {
     if (user.email && !isLoading) {
       navigate('/');
     }
   }, [user.email, isLoading]);
-  
+
     const SubmitForm = (event: any) =>{ 
         event?.preventDefault()
         const email = event.target.email.value;
@@ -34,7 +66,7 @@ export default function Login() {
     <div className="bg-purple-100">
          <div className="relative flex flex-col justify-center h-screen overflow-hidden">
         <div className="w-full p-6 m-auto bg-purple-500  rounded-md shadow-md lg:max-w-xl">
-            <h1 className="text-3xl font-semibold text-center text-white">DaisyUI</h1>
+            <h1 className="text-3xl font-semibold text-center text-white">LOGIN</h1>
             <form onSubmit={SubmitForm} className="space-y-4 "> 
                 <div>
                     <label className="label">
