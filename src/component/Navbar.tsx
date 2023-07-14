@@ -7,6 +7,10 @@ interface NavigateRouteType{
 export default function TopNavBar() {
     const navigationRoute:NavigateRouteType[] = [
         {
+            name: "Books",
+            path: "/allBooks"
+        },
+        {
             name: "Login",
             path: "/login"
         },
@@ -22,7 +26,7 @@ export default function TopNavBar() {
     <a className="btn btn-ghost normal-case text-2xl text-white">Book Catalog</a>
   </div>
   <div className="flex-none text-white text-4xl">
-    <ul className="menu menu-horizontal px-1">
+    <ul className="menu menu-horizontal mr-6 px-1">
      <div >
      {
             navigationRoute.map((navigate: NavigateRouteType)=>{
