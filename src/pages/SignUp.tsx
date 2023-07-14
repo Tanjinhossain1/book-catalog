@@ -6,12 +6,15 @@ import { useEffect } from "react";
 import TopNavBar from "@/component/Navbar";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { userCreate } from "@/redux/sliceReducers/userSliceReducer";
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {toast} from "react-toastify"
  
 export default function SignUp() {
     const dispatch = useAppDispatch();
-    const {error} = useAppSelector(state=>state.user)
+    const {user,isLoading,error} = useAppSelector(state=>state.user);
+
+  const navigate = useNavigate(); 
+
     const SubmitForm = (event: any) =>{
         event?.preventDefault()
         const email = event.target.email.value;
@@ -19,6 +22,13 @@ export default function SignUp() {
          
     dispatch(userCreate({email: email,password: password}))
     }
+    
+  useEffect(() => {
+    if (user.email && !isLoading) {
+      navigate('/');
+    }
+  }, [user.email, isLoading]);
+
     useEffect(() => {
         if(error){
             if(error === "Firebase: Error (auth/email-already-in-use)."){

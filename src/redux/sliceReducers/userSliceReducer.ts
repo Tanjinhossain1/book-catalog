@@ -1,6 +1,7 @@
 import { auth } from "@/libs/firebase";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {toast} from "react-toastify";
 
 interface IUserType {
     email: string | null,
@@ -25,13 +26,37 @@ const initialState: IUserStateType = {
 export const userCreate = createAsyncThunk("user/userCreate",
     async ({ email, password }: { email: string, password: string }) => {
         const data = await createUserWithEmailAndPassword(auth, email, password); 
+        if(data.user.email){
+            toast.success('User Create Success Fully!', {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                }); 
+        }
         return data.user.email
     }
 );
 
 export const loginUser = createAsyncThunk("user/loginUser",
     async ({ email, password }: { email: string, password: string }) => {
-        const data = await signInWithEmailAndPassword(auth, email, password)
+        const data = await signInWithEmailAndPassword(auth, email, password);
+        if(data.user.email){
+            toast.success('User Login Success Fully!', {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                }); 
+        }
         return data.user.email
     }
 );

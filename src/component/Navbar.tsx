@@ -2,16 +2,26 @@ import { auth } from '@/libs/firebase';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { setUser } from '@/redux/sliceReducers/userSliceReducer';
 import { signOut } from 'firebase/auth';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import {toast} from "react-toastify";
  
 export default function TopNavBar() {
     const { user } = useAppSelector((state) => state.user);
     const dispatch = useAppDispatch();
 
     const handleLogout =  () => { 
-       signOut(auth).then(() => {
-        console.log('first')
+       signOut(auth).then(() => { 
         dispatch(setUser(null));
+        toast.success('Log Out Success Full!', {
+            position: "top-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            }); 
       }).catch((err: any)=>{
         console.log(err)
       })
