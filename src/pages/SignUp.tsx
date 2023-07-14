@@ -48,7 +48,7 @@ export default function SignUp() {
                     <label className="label">
                         <span className="text-base label-text text-white">Email</span>
                     </label>
-                    <input type="text" name="email" placeholder="Email Address" className="w-full input input-bordered input-primary" />
+                    <input type="email" name="email" placeholder="Email Address" className="w-full input input-bordered input-primary" />
                 </div>
                 <div>
                     <label className="label">
