@@ -11,7 +11,7 @@ import {toast} from "react-toastify";
 
  
 export default function Login() {
-    const dispatch = useAppDispatch(); 
+    const dispatch = useAppDispatch();  
   const { user, isLoading } = useAppSelector((state) => state.user); 
   const {error} = useAppSelector(state=>state.user);
 
@@ -49,7 +49,7 @@ export default function Login() {
 
   useEffect(() => {
     if (user.email && !isLoading) {
-      navigate('/');
+      navigate("/");
     }
   }, [user.email, isLoading]);
 

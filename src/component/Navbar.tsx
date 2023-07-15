@@ -31,16 +31,23 @@ export default function TopNavBar() {
     <div> 
         <div className="navbar bg-purple-500">
   <div className="flex-1">
-    <a className="btn btn-ghost normal-case text-2xl text-white">Book Catalog</a>
+    <Link to="/" className="btn btn-ghost normal-case text-2xl text-white">Book Catalog</Link>
   </div>
   <div className="flex-none text-white text-4xl">
     <ul className="menu menu-horizontal mr-6 px-1">
      <div>
+       <Link className='ml-4 text-xl' to={"/"}>Home</Link>
+       <Link className='ml-4 text-xl' to={"/allBooks"}>All Books</Link>
         {
             user.email ? 
-            <button onClick={handleLogout} className='ml-4 text-xl'>LogOut</button> : 
+            <>
+            <Link to={"/addNewBooks"} className='ml-4 text-xl'>Add New Books</Link> 
+            <button onClick={handleLogout} className='ml-4 text-xl'>LogOut</button> 
+            </>
+            : 
             <> <Link className='ml-4 text-xl' to={"/login"}>Login</Link>
-            <Link className='ml-4 text-xl' to={"/signUp"}>SignUp</Link></>
+            <Link className='ml-4 text-xl' to={"/signUp"}>SignUp</Link>
+            </>
         }  
      </div> 
     </ul>

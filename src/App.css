@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes backgroundColorPalette {
+    0% {
+       background: #d7e3f5;
+    }
+    25% {
+      background: #f3d7f5;
+    }
+    50% {
+      background: #f5d7e7;
+    }
+    75% {
+      background: #d7f5e8
+    }
+    100% {
+      background: #e5f5d7;
+    }
+  }
+
+  body {
+    animation-name: backgroundColorPalette;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    padding-bottom: 15px;
+  }

@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import './App.css' 
-import Home from './pages/Home' 
+import './App.css'  
 import { useAppDispatch } from './redux/hook'
 import { setLoading, setUser } from './redux/sliceReducers/userSliceReducer';
-import { auth } from './libs/firebase';
+import { auth } from './libs/firebase'; 
+import MainLayout from './pages/MainLayout';
 
 function App() { 
 
@@ -23,9 +23,9 @@ function App() {
   }, [dispatch]);
   
   return (
-    <>  
-    <Home />
-    </>
+    <div>  
+   <MainLayout />
+    </div>
   )
 }
 

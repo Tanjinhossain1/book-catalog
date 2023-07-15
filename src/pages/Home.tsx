@@ -1,10 +1,10 @@
-import TopNavBar from "../component/Navbar";
+import Books from "@/component/Books"; 
 
  
 export default function Home() {
   return (
-    <div>
-        <TopNavBar />
+    <div>   
+        <Books />
     </div>
   )
 }
