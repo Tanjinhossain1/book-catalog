@@ -5,9 +5,14 @@
 import {useEffect} from "react"
 import {toast} from "react-toastify"
 import { useCreateBookMutation } from '@/redux/api/apiSlice' 
+import { useAppSelector } from "@/redux/hook";
+import { IBookTypes } from "@/types/book";
+import BookForm from "@/component/BookForm";
 
 export default function AddNewBooks() {
-  const [createBook,{data}] = useCreateBookMutation()
+  const [createBook,{data, isLoading}] = useCreateBookMutation();
+  const { user } = useAppSelector((state) => state.user);
+
 
 const handleSubmit = (event: any) =>{
     event?.preventDefault()
@@ -16,11 +21,12 @@ const handleSubmit = (event: any) =>{
     const genre = event.target.genre.value;
     const publicationDate = event.target.title.value;
 
-    const options = {
+    const options: IBookTypes = {
         title: title,
         author: author,
         genre: genre,
-        publicationDate: publicationDate
+        publicationDate: publicationDate,
+        userEmail: user.email,
     }
    
     
@@ -46,60 +52,7 @@ useEffect(()=>{
        className="max-w-md mx-auto p-6 bg-white   rounded shadow-md">
       <h2 className="text-2xl font-bold mb-6">Add a New Book</h2>
       <form onSubmit={handleSubmit} >
-        <div className="mb-4">
-          <label htmlFor="title" className="block font-semibold mb-1 text-gray-700">
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title" 
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="author" className="block font-semibold mb-1 text-gray-700">
-            Author
-          </label>
-          <input
-            type="text"
-            id="author"
-            name="author" 
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="genre" className="block font-semibold mb-1 text-gray-700">
-            Genre
-          </label>
-          <input
-            type="text"
-            id="genre"
-            name="genre" 
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="publicationDate" className="block font-semibold mb-1 text-gray-700">
-            Publication Date
-          </label>
-          <input
-            type="text"
-            id="publicationDate"
-            name="publicationDate" 
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Add Book
-        </button>
+        <BookForm isLoading={isLoading} />
       </form>
     </div>
     </div>

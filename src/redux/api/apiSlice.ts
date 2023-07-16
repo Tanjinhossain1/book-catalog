@@ -13,7 +13,7 @@ export const api = createApi({
             query: () => `/books`, 
             providesTags: ["books"]
         }),
-        singleBook: builder.query({
+        getSingleBook: builder.query({
             query: (id: string) => `/book/${id}`
         }), 
         createBook: builder.mutation({
@@ -24,13 +24,22 @@ export const api = createApi({
             }),
             invalidatesTags: ["books"]
         }),
+        updateBook: builder.mutation({
+            query: (data) =>({
+                url: `/book`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["books"]
+        }),
     })
 })
 
 export const {
     useGetBooksQuery,
-    useSingleBookQuery, 
+    useGetSingleBookQuery, 
     useCreateBookMutation,
+    useUpdateBookMutation,
 } = api;
 
 

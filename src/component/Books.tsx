@@ -6,9 +6,11 @@
 import { useGetBooksQuery } from '@/redux/api/apiSlice'
 import { IBookTypes } from '@/types/book'
 import { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Books() {
     const { data } = useGetBooksQuery(""); 
+    const navigate = useNavigate()
     const [books,setBooks] = useState<IBookTypes[] | null>(null);
     
     const OnSearchBooks =(value: string, mode: "search" | "genre filter" | "year filter") =>{
@@ -24,6 +26,10 @@ export default function Books() {
             setBooks(data?.data)
         }  
     },[data?.data])
+
+    const OnDetailPage = (id: string) =>{
+        navigate(`bookDetail/${id}`)
+    }
   return (
     <div>
   <form className=" mx-auto w-[80%] gap-10 grid grid-cols-3  px-4 mb-4  ">
@@ -76,14 +82,15 @@ export default function Books() {
         {
             books?.map((book: IBookTypes)=>{
                 return(
-                    <div className="bg-white p-10 rounded-lg shadow-md border-2 ">
+                    <div onClick={() =>OnDetailPage(book._id as string)} className="bg-white px-10 py-3 rounded-lg shadow-md border-2 ">
                     <h1 className=""><span className="text-xl font-bold text-black ">Name:</span> {book.title}</h1>
                     <h3 className="text-xs uppercase"><span className='font-bold text-gray-600'>Author: </span> {book.author}</h3>
                     <h2 className="tracking-wide">
                     <span className='font-bold text-gray-600'> Genre: </span>{book.genre}
                       <br />
                       <span className='font-bold text-gray-600'>Publication Date: </span> {book.publicationDate}
-                    </h2>
+                    </h2> 
+                    <button className="btn btn-outline btn-primary mt-3">View Detail</button> 
                   </div>
                 ) 
             })
