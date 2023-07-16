@@ -298,8 +298,14 @@ export default function Books({bookDetail,isHome}: {bookDetail?: IBookTypes[],is
                 ) 
             })
         }
+        {
+            isHome ? 
+        <div className='mt-16'>
+           <Link to={"/allBooks"}> <h1 className='text-2xl underline font-bold'>see more</h1></Link>
         </div>
-
+            : null
+        }
+        </div>
     </div>
   )
 }
