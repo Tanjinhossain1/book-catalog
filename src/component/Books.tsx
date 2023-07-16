@@ -4,8 +4,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useCreateWishlistMutation, useDeleteWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
-import { IBookTypes, IWishListType } from '@/types/book'
+import { useCreateAddToReadMutation, useCreateWishlistMutation, useDeleteWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
+import { IBookTypes, IReadType, IWishListType } from '@/types/book'
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaHeartbeat } from "react-icons/fa";
@@ -18,13 +18,14 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
 
     const {user} = useAppSelector(state => state.user);
     const [createWishlist,{data: wishlist}] = useCreateWishlistMutation(); 
+    const [createAddToRead,{data: readStatus}] = useCreateAddToReadMutation(); 
     const [deleteWishlist,{data: deleteConfirm}] = useDeleteWishlistMutation(); 
 
     const [books,setBooks] = useState<IBookTypes[] | null>(null);
 
     const [isWishlist, setWishlist] = useState<boolean>(false);  
 
-
+    // add wish list func 
     const handleWishlistToggle = (id: string) => {
     if(user.email){   
         const options = {
@@ -45,10 +46,32 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
         });
     }
     };
-
+    // remove wish list func 
     const handleRemoveWishlistToggle = (wishListId: string) => {
         if(user.email){    
             deleteWishlist(wishListId);
+        }else{
+            toast.error("You Are Not Authorized", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+        };
+
+            // add to read func 
+    const handleToReadBookToggle = (id: string) => {
+        if(user.email){   
+            const options = {
+                id: id,
+                data: {addRead: {isRead: true, readUser: user.email, ReadBookId: id, isComplete: false}}
+            }
+            createAddToRead(options);
         }else{
             toast.error("You Are Not Authorized", {
                 position: "top-right",
@@ -86,10 +109,10 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
             });
         }  
     },[wishlist])
-    
+
     useEffect(()=>{
         if(deleteConfirm){
-            toast.success("Delete Wish List", {
+            toast.warn("Delete Wish List", {
                 position: "top-center",
                 autoClose: 10000,
                 hideProgressBar: false,
@@ -101,6 +124,21 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
             });
         }  
     },[deleteConfirm])
+
+    useEffect(()=>{
+        if(readStatus){
+            toast.success("Add To Read ", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }  
+    },[readStatus])
 
     useEffect(()=>{
         if(data?.data){
@@ -169,6 +207,8 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
         {
             books?.map((book: IBookTypes)=>{ 
                 const newList = book?.wishlist?.find((newWish: IWishListType)=> newWish.wishList &&  book._id === newWish.wishListId && user.email === newWish.wishListUser )
+
+                const newAddReadList = book?.addRead?.find((newWish: IReadType)=> newWish.isRead &&  book._id === newWish.ReadBookId && user.email === newWish.readUser )
                 return(
                     <div className="bg-white px-10 py-3 rounded-lg shadow-md border-2 ">
                     <h1 className=""><span className="text-xl font-bold text-black ">Name:</span> {book.title}</h1>
@@ -178,32 +218,57 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
                       <br />
                       <span className='font-bold text-gray-600'>Publication Date: </span> {book.publicationDate}
                     </h2> 
-                    <div className=''>
-
-                    <button onClick={() =>OnDetailPage(book._id as string)}  className="btn btn-outline btn-primary mr-3 mt-3">View Detail</button> 
-                    {user.email === newList?.wishListUser && book._id === newList.wishListId && newList.wishList ?
-                     <button
-                     onClick={() => handleRemoveWishlistToggle(newList?.wishListId)}
-                     className={` items-center inline bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
-                   > 
-                         <FaHeartbeat   /> 
-                   </button>  
-                     :
-                  <button
-                  onClick={() => handleWishlistToggle(book._id as string)}
-                  className={`  items-center inline bg-gray-500  hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                  <div className='flex   '>
+                  <div className=''>
+                                
+                <button onClick={() =>OnDetailPage(book._id as string)}  className="btn btn-outline btn-primary mr-3 mt-3">View Detail</button> 
+                {user.email === newList?.wishListUser && book._id === newList.wishListId && newList.wishList ?
+                 <button
+                 onClick={() => handleRemoveWishlistToggle(newList?.wishListId)}
+                 className={` items-center inline bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
                 > 
-                  <FaHeart  /> 
+                     <FaHeartbeat   /> 
                 </button>  
-                    }
-                    </div>
-                  
-                               
+                 :
+                <button
+                onClick={() => handleWishlistToggle(book._id as string)}
+                className={`  items-center inline bg-gray-500  hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                > 
+                <FaHeart  /> 
+                </button>  
+                }
+                </div>
+                <div className='mt-4 ml-3'>
+                {user.email === newAddReadList?.readUser && book._id === newAddReadList.ReadBookId && newAddReadList.isRead ?
+                newAddReadList.isComplete ? <button 
+                className={` items-center inline bg-green-600 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+               > 
+                  Complete
+               </button>  :
+                <button 
+                onClick={()=>console.log('first')}
+                 className={` items-center inline bg-green-600 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                > 
+                    Read...(Complete?)
+                </button>  
+                 :
+                <button
+                onClick={() => handleToReadBookToggle(book._id as string)}
+                className={`  items-center inline bg-red-300  hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                > 
+                 Add To Read
+                </button>  
+                }   
+                </div> 
+                  </div>
+                     
+                   
                   </div>
                 ) 
             })
         }
         </div>
+
     </div>
   )
 }

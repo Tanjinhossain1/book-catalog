@@ -37,6 +37,7 @@ export default function TopNavBar() {
     <ul className="menu menu-horizontal mr-6 px-1">
      <div>
        <Link className='ml-4 text-xl' to={"/"}>Home</Link>
+       <Link className='ml-4 text-xl' to={"/readIn"}>Read In</Link>
        <Link className='ml-4 text-xl' to={"/wishlist"}>Wish List</Link>
        <Link className='ml-4 text-xl' to={"/allBooks"}>All Books</Link>
         {

@@ -10,12 +10,13 @@ export const api = createApi({
     tagTypes: [
         "books",
         "reviews",
-        "wishlist"
+        "wishlist",
+        "addToRead"
     ],
     endpoints: (builder) =>({
         getBooks : builder.query({
             query: () => `/books`, 
-            providesTags: ["books","wishlist"]
+            providesTags: ["books","wishlist", "addToRead"]
         }),
         getSingleBook: builder.query({
             query: (id: string) => `/book/${id}`
@@ -74,6 +75,18 @@ export const api = createApi({
             }),
             invalidatesTags: ["wishlist"]
         }),
+        createAddToRead: builder.mutation({
+            query: ({id,data}) =>({
+                url: `/addToRead/${id}`,
+                method: "POST", 
+                body: data
+            }),
+            invalidatesTags: ["addToRead"]
+        }),
+        getAddToRead: builder.query({
+            query: (email) => `/addToRead/${email}`, 
+            providesTags: ["addToRead"]
+        }), 
     })
 })
 
@@ -88,6 +101,8 @@ export const {
     useCreateWishlistMutation,
     useGetWishListQuery,
     useDeleteWishlistMutation,
+    useCreateAddToReadMutation,
+    useGetAddToReadQuery,
 } = api;
 
 

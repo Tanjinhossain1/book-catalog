@@ -6,6 +6,13 @@ export interface IWishListType {
     wishListUser: string;
 }
 
+export interface IReadType { 
+    ReadBookId: string;
+    isRead: boolean;
+    readUser: string;
+    isComplete: string;
+} 
+
 export interface IBookTypes {
     _id?: string
     title: string;
@@ -13,5 +20,6 @@ export interface IBookTypes {
     genre: string;
     publicationDate: string;
     userEmail: string | null;
-    wishlist?: IWishListType[]
+    wishlist?: IWishListType[];
+    addRead?: IReadType[]
 }
