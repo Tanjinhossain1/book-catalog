@@ -16,8 +16,7 @@ export default function SignUp() {
   const navigate = useNavigate(); 
 
     const SubmitForm = (event: any) =>{
-        event?.preventDefault()
-        const name = event.target.name.value; 
+        event?.preventDefault() 
         const email = event.target.email.value;
         const password = event.target.password.value; 
          

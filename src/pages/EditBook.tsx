@@ -4,9 +4,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import BookForm from '@/component/BookForm';
 import { useGetSingleBookQuery, useUpdateBookMutation } from '@/redux/api/apiSlice';
-import { useAppSelector } from '@/redux/hook';
-import { IBookTypes } from '@/types/book';
-import React, {useEffect} from 'react'
+import { useAppSelector } from '@/redux/hook'; 
+import  {useEffect} from 'react'
 import { useParams } from 'react-router-dom';
 import {toast} from 'react-toastify'
 
@@ -65,10 +64,10 @@ useEffect(()=>{
 
   return (
     <div  
-    className="max-w-md mx-auto p-6 bg-white   rounded shadow-md">
-   <h2 className="text-2xl font-bold mb-6">Add a New Book</h2>
+    className="max-w-md mx-auto mt-10 p-6 bg-white   rounded shadow-md">
+   <h2 className="text-2xl font-bold mb-6">Edit Book</h2>
    <form onSubmit={handleSubmit} >
-     <BookForm bookDetail={book} isLoading={isLoading} />
+     <BookForm buttonText='Edit Book' bookDetail={book} isLoading={isLoading} />
    </form>
  </div>
   )

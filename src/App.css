@@ -6,13 +6,29 @@
     0% {
        background: #d7e3f5;
     }
-    25% {
+    15% {
       background: #f3d7f5;
     }
-    50% {
+    25% {
       background: #f5d7e7;
     }
+    
+    35% {
+      background: #edeac0;
+    }
+    45% {
+      background: #daedc0;
+    }
+    55% {
+      background: #edc0c0;
+    } 
+    65% {
+      background: #d3f2ee
+    }
     75% {
+      background: #d3d6f2
+    }
+    88% {
       background: #d7f5e8
     }
     100% {
@@ -24,6 +40,5 @@
     animation-name: backgroundColorPalette;
     animation-duration: 10s;
     animation-iteration-count: infinite;
-    animation-direction: alternate;
-    padding-bottom: 15px;
+    animation-direction: alternate; 
   }

@@ -36,11 +36,11 @@ const router = createBrowserRouter([
       },  
        {
         path: '/wishlist',
-        element: <Wishlist /> ,
+        element: <PrivateRoute><Wishlist /></PrivateRoute> ,
       },  
        {
         path: '/readIn',
-        element: <ReadIn /> ,
+        element: <PrivateRoute><ReadIn /></PrivateRoute>  ,
       },  
        {
         path: '/addNewBook',

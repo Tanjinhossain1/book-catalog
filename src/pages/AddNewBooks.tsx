@@ -49,10 +49,10 @@ useEffect(()=>{
   return (
     <div>
       <div  
-       className="max-w-md mx-auto p-6 bg-white   rounded shadow-md">
+       className="max-w-md mx-auto mt-10 p-6 bg-white   rounded shadow-md">
       <h2 className="text-2xl font-bold mb-6">Add a New Book</h2>
       <form onSubmit={handleSubmit} >
-        <BookForm isLoading={isLoading} />
+        <BookForm buttonText="Add Book" isLoading={isLoading} />
       </form>
     </div>
     </div>

@@ -6,9 +6,10 @@ import { IBookTypes } from "@/types/book";
 
 interface BookFormPropsType {
     isLoading: boolean,
+    buttonText: string
     bookDetail?: IBookTypes
 }
-export default function BookForm({isLoading,bookDetail}: BookFormPropsType) { 
+export default function BookForm({isLoading,bookDetail, buttonText}: BookFormPropsType) { 
   return (
     <div> 
         <div className="mb-4">
@@ -72,7 +73,7 @@ export default function BookForm({isLoading,bookDetail}: BookFormPropsType) {
           isLoading ?
           <><span className="loading loading-spinner loading-xs"></span> </>
            : 
-         <span>Add Book</span>
+         <span>{buttonText}</span>
         }
         </button>
      </div>

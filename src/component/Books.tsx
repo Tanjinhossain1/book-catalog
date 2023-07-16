@@ -12,7 +12,7 @@ import { FaHeart, FaHeartbeat } from "react-icons/fa";
 import { useAppSelector } from '@/redux/hook';
 import { toast } from 'react-toastify';
 
-export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
+export default function Books({bookDetail,isHome}: {bookDetail?: IBookTypes[],isHome?: boolean}) {
     const { data } = useGetBooksQuery(""); 
     const navigate = useNavigate();
 
@@ -108,7 +108,7 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
 
         const filterableBooks = finalBookDetail?.filter((book: IBookTypes)=> mode === "search" ? book.title.toLowerCase().includes(searchValue) || book.author.toLowerCase().includes(searchValue) || book.genre.toLowerCase().includes(searchValue) : mode === "genre filter" ? book.genre.toLowerCase().includes(searchValue) : book.publicationDate.toLowerCase().includes(searchValue)  );
 
-        setBooks(filterableBooks);
+        setBooks(isHome ? filterableBooks.slice(0,10) : filterableBooks);
     }
 
     useEffect(()=>{
@@ -173,9 +173,9 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
 
     useEffect(()=>{
         if(data?.data){
-            setBooks(bookDetail ? bookDetail : data?.data)
+            setBooks(bookDetail ? isHome ? bookDetail.slice(0,10) : bookDetail : isHome ? data?.data.slice(0,10) : data?.data)
         }  
-    },[data?.data, bookDetail])
+    },[data?.data, bookDetail, isHome])
 
     const OnDetailPage = (id: string) =>{
         navigate(`/bookDetail/${id}`)
@@ -234,7 +234,7 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
         <button className="btn btn-primary mt-3">Add New</button> 
         </Link> 
         </div>
-    <div className='grid grid-cols-3 w-[80%] mx-auto gap-5'>
+    <div className='grid grid-cols-3 w-[83%] mx-auto gap-5'>
         {
             books?.map((book: IBookTypes)=>{ 
                 const newList = book?.wishlist?.find((newWish: IWishListType)=> newWish.wishList &&  book._id === newWish.wishListId && user.email === newWish.wishListUser )

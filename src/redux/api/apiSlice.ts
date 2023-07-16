@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { IBookTypes } from '@/types/book';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */ 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 
 export const api = createApi({
     reducerPath: "api",
-    baseQuery: fetchBaseQuery({ baseUrl : "http://localhost:5000"}),
+    baseQuery: fetchBaseQuery({ baseUrl : "https://book-catalog-hs4t.onrender.com/"}),
     tagTypes: [
         "books",
         "reviews",

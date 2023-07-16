@@ -36,19 +36,19 @@ export default function TopNavBar() {
   <div className="flex-none text-white text-4xl">
     <ul className="menu menu-horizontal mr-6 px-1">
      <div>
-       <Link className='ml-4 text-xl' to={"/"}>Home</Link>
-       <Link className='ml-4 text-xl' to={"/readIn"}>Read In</Link>
-       <Link className='ml-4 text-xl' to={"/wishlist"}>Wish List</Link>
-       <Link className='ml-4 text-xl' to={"/allBooks"}>All Books</Link>
+       <Link className='ml-4 text-xl underline' to={"/"}>Home</Link>
+       <Link className='ml-4 text-xl underline' to={"/readIn"}>Read In</Link>
+       <Link className='ml-4 text-xl underline' to={"/wishlist"}>Wish List</Link>
+       <Link className='ml-4 text-xl underline' to={"/allBooks"}>All Books</Link>
         {
             user.email ? 
             <>
-            <Link to={"/addNewBook"} className='ml-4 text-xl'>Add New Books</Link> 
-            <button onClick={handleLogout} className='ml-4 text-xl'>LogOut</button> 
+            <Link to={"/addNewBook"} className='ml-4 text-xl underline'>Add New Books</Link> 
+            <button onClick={handleLogout} className='ml-4 text-xl underline'>LogOut</button> 
             </>
             : 
-            <> <Link className='ml-4 text-xl' to={"/login"}>Login</Link>
-            <Link className='ml-4 text-xl' to={"/signUp"}>SignUp</Link>
+            <> <Link className='ml-4 text-xl underline' to={"/login"}>Login</Link>
+            <Link className='ml-4 text-xl underline' to={"/signUp"}>SignUp</Link>
             </>
         }  
      </div> 
