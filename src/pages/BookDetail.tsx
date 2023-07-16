@@ -3,19 +3,28 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useDeleteBookMutation, useGetSingleBookQuery } from '@/redux/api/apiSlice';
+import { useCreateReviewMutation, useDeleteBookMutation, useGetReviewQuery, useGetSingleBookQuery } from '@/redux/api/apiSlice';
 import { useAppSelector } from '@/redux/hook'; 
 import { useNavigate, useParams } from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
+
+interface IReviewType {
+  review: string;
+  user: string;
+}
 
 export default function BookDetail() {
     const {id} = useParams();
     const navigate = useNavigate();
 
     const { user } = useAppSelector((state) => state.user);
+
     const {data: book, isLoading} = useGetSingleBookQuery(id!);
-    const [deleteBook,{data}] = useDeleteBookMutation();
+    const {data: reviews} = useGetReviewQuery(id); 
+
+    const [deleteBook,{data: bookDeleted}] = useDeleteBookMutation();
+    const [createReview] = useCreateReviewMutation();
 
     const [deleteBookConfirmation,setDeleteBookConfirmation] = useState<boolean>(false)
 
@@ -38,10 +47,9 @@ export default function BookDetail() {
     const closeConfirmationModal = () =>{
         setDeleteBookConfirmation(false)
     }
-    const handleDelete = () =>{ 
-        console.log('first  ', user.email === book.userEmail, user.email , book.userEmail)
+    const handleDelete = () =>{  
         if(user.email === book.userEmail){
-            deleteBook(id)
+            deleteBook(id);
         }else{
             toast.error("This Is Not Your Book. Make First ", {
                 position: "top-right",
@@ -58,7 +66,7 @@ export default function BookDetail() {
     }
 
     useEffect(()=>{
-        if(data){
+        if(bookDeleted){
      toast.success('Delete The Book!', {
             position: "top-right",
             autoClose: 10000,
@@ -71,13 +79,24 @@ export default function BookDetail() {
         });
         navigate('/')
         }
-    },[data])
+    },[bookDeleted])
 
+    const handleReviewSubmit = (event: any) =>{ 
+      event?.preventDefault();
+      const review = event.target.review.value; 
+      if(user.email){ 
+        const options = {
+          id: id,
+          data: {reviews: {review: review, user: user.email}},
+        }
+        createReview(options);
+      }
+    }
+ console.log('first  reviews ', reviews)
   return (
     <div>
         {
             isLoading ? <div className='text-center'><span className="loading loading-spinner loading-lg"></span></div> :
-
            <div>
             <div className=' w-[30%] mx-auto gap-5'>
         { 
@@ -95,37 +114,54 @@ export default function BookDetail() {
                     <button onClick={()=> setDeleteBookConfirmation(true)} className="btn btn-error">Delete</button> 
                     </div>
                   </div> 
-                
         }
         </div>
            </div>
         } 
-        <div className='mt-5'>
-            
+        {/* for review  */}
+        <form onSubmit={handleReviewSubmit} className='mt-5 flex justify-center align-top w-full'>
+        <textarea name='review' placeholder="Review" className="textarea textarea-bordered textarea-xs w-full max-w-xs" ></textarea>
+       <div className='mr-4'>
+       <button
+      type="submit"
+      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 mt-10 rounded focus:outline-none focus:shadow-outline"
+    >
+      Submit
+    </button>
+       </div>
+     <div>
+     {
+        reviews?.reviews?.map((e: IReviewType)=>{
+          return ( 
 <section
-  className="rounded-md p-6 text-center shadow-lg md:p-12 md:text-left mb: 4" >
-  <div className="flex justify-center">
+  className="  text-center  mb-3 md:text-left" >
+  <div className="flex justify-center align-middle">
     <div className="max-w-3xl">
       <div
         className="  block rounded-lg bg-white px-6 shadow-lg dark:bg-neutral-800 dark:shadow-black/20"> 
         <div className="md:flex md:flex-row lg:flex ">
           <div
-            className="mx-auto mb-1 flex    justify-center md:mx-0 m lg:mb-0">
-            <h1>Name</h1>
+            className="mx-auto mb-1 flex justify-center md:mx-0 m lg:mb-0">
+            <h1>{e.user.split('@')[0].replace(/\d+/g, "")}</h1>
           </div>
           <div className="md:ml-6">
             <p
               className="mb-1 font-light text-neutral-500 dark:text-neutral-300">
-              Lorem ipsum dolor, sit amet consectetur  
+              {e.review}
             </p> 
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
-        </div>
 
+</section>
+          )
+        })
+       }
+     </div>
+        </form>
+        {/* delete confirmation modal  */}
         {
             deleteBookConfirmation &&  <div
             className={`fixed inset-0 z-10 flex items-center justify-center transition-opacity ${

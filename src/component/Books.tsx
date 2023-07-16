@@ -6,7 +6,7 @@
 import { useGetBooksQuery } from '@/redux/api/apiSlice'
 import { IBookTypes } from '@/types/book'
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 export default function Books() {
     const { data } = useGetBooksQuery(""); 
@@ -32,7 +32,7 @@ export default function Books() {
     }
   return (
     <div>
-  <form className=" mx-auto w-[80%] gap-10 grid grid-cols-3  px-4 mb-4  ">
+  <form className=" mx-auto w-[80%] gap-10 grid grid-cols-3  px-4 mb-1  ">
             <div className="relative ">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -78,6 +78,11 @@ export default function Books() {
             </select>
             </div>
         </form>
+        <div className=' text-end w-[90%] mb-1'>  
+        <Link to="/addNewBook"> 
+        <button className="btn btn-primary mt-3">Add New</button> 
+        </Link>
+        </div>
     <div className='grid grid-cols-3 w-[80%] mx-auto gap-5'>
         {
             books?.map((book: IBookTypes)=>{

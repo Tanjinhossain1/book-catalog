@@ -8,7 +8,8 @@ export const api = createApi({
     reducerPath: "api",
     baseQuery: fetchBaseQuery({ baseUrl : "http://localhost:5000"}),
     tagTypes: [
-        "books"
+        "books",
+        "reviews"
     ],
     endpoints: (builder) =>({
         getBooks : builder.query({
@@ -41,6 +42,18 @@ export const api = createApi({
             }),
             invalidatesTags: ["books"]
         }),
+        createReview: builder.mutation({
+            query: ({id,data}) =>({
+                url: `/reviews/${id}`,
+                method: "POST", 
+                body: data
+            }),
+            invalidatesTags: ["reviews"]
+        }),
+        getReview: builder.query({
+            query: (id) => `/review/${id}`, 
+            providesTags: ["reviews"]
+        }), 
     })
 })
 
@@ -50,6 +63,8 @@ export const {
     useCreateBookMutation,
     useUpdateBookMutation,
     useDeleteBookMutation,
+    useCreateReviewMutation,
+    useGetReviewQuery,
 } = api;
 
 

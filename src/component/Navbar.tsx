@@ -41,7 +41,7 @@ export default function TopNavBar() {
         {
             user.email ? 
             <>
-            <Link to={"/addNewBooks"} className='ml-4 text-xl'>Add New Books</Link> 
+            <Link to={"/addNewBook"} className='ml-4 text-xl'>Add New Books</Link> 
             <button onClick={handleLogout} className='ml-4 text-xl'>LogOut</button> 
             </>
             : 

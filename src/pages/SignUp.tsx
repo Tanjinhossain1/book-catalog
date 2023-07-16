@@ -17,6 +17,7 @@ export default function SignUp() {
 
     const SubmitForm = (event: any) =>{
         event?.preventDefault()
+        const name = event.target.name.value; 
         const email = event.target.email.value;
         const password = event.target.password.value; 
          
@@ -56,15 +57,21 @@ export default function SignUp() {
             <form onSubmit={SubmitForm} className="space-y-4 "> 
                 <div>
                     <label className="label">
+                        <span className="text-base label-text text-white">Name</span>
+                    </label>
+                    <input required type="text" name="name" placeholder="Name" className="w-full input input-bordered input-primary" />
+                </div>
+                <div>
+                    <label className="label">
                         <span className="text-base label-text text-white">Email</span>
                     </label>
-                    <input type="email" name="email" placeholder="Email Address" className="w-full input input-bordered input-primary" />
+                    <input required type="email" name="email" placeholder="Email Address" className="w-full input input-bordered input-primary" />
                 </div>
                 <div>
                     <label className="label">
                         <span className="text-base label-text text-white">Password</span>
                     </label>
-                    <input type="password" name="password" placeholder="Enter Password"
+                    <input required type="password" name="password" placeholder="Enter Password"
                         className="w-full input input-bordered input-primary" />
                 </div>
                 <div>
