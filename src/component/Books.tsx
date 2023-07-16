@@ -12,7 +12,7 @@ import { FaHeart, FaHeartbeat } from "react-icons/fa";
 import { useAppSelector } from '@/redux/hook';
 import { toast } from 'react-toastify';
 
-export default function Books() {
+export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
     const { data } = useGetBooksQuery(""); 
     const navigate = useNavigate();
 
@@ -20,6 +20,7 @@ export default function Books() {
     const [createWishlist,{data: wishlist}] = useCreateWishlistMutation(); 
 
     const [books,setBooks] = useState<IBookTypes[] | null>(null);
+
     const [isWishlist, setWishlist] = useState<boolean>(false);  
 
 
@@ -47,8 +48,9 @@ export default function Books() {
 
     const OnSearchBooks =(value: string, mode: "search" | "genre filter" | "year filter") =>{
         const searchValue: string = value.toLowerCase();
+        const finalBookDetail = bookDetail ? bookDetail : data?.data;
 
-        const filterableBooks = data?.data?.filter((book: IBookTypes)=> mode === "search" ? book.title.toLowerCase().includes(searchValue) || book.author.toLowerCase().includes(searchValue) || book.genre.toLowerCase().includes(searchValue) : mode === "genre filter" ? book.genre.toLowerCase().includes(searchValue) : book.publicationDate.toLowerCase().includes(searchValue)  );
+        const filterableBooks = finalBookDetail?.filter((book: IBookTypes)=> mode === "search" ? book.title.toLowerCase().includes(searchValue) || book.author.toLowerCase().includes(searchValue) || book.genre.toLowerCase().includes(searchValue) : mode === "genre filter" ? book.genre.toLowerCase().includes(searchValue) : book.publicationDate.toLowerCase().includes(searchValue)  );
 
         setBooks(filterableBooks);
     }
@@ -70,14 +72,14 @@ export default function Books() {
 
     useEffect(()=>{
         if(data?.data){
-            setBooks(data?.data)
+            setBooks(bookDetail ? bookDetail : data?.data)
         }  
-    },[data?.data])
+    },[data?.data, bookDetail])
 
     const OnDetailPage = (id: string) =>{
         navigate(`/bookDetail/${id}`)
     }
-    console.log(' data  ', data)
+    console.log(' books  ', books)
   return (
     <div>
   <form className=" mx-auto w-[80%] gap-10 grid grid-cols-3  px-4 mb-1  ">

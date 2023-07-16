@@ -64,7 +64,7 @@ export const api = createApi({
             invalidatesTags: ["wishlist"]
         }),
         getWishList: builder.query({
-            query: (id) => `/wishlist/${id}`, 
+            query: (email) => `/wishlist/${email}`, 
             providesTags: ["wishlist"]
         }), 
     })
