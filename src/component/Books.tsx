@@ -234,7 +234,7 @@ export default function Books({bookDetail,isHome}: {bookDetail?: IBookTypes[],is
         <button className="btn btn-primary mt-3">Add New</button> 
         </Link> 
         </div>
-    <div className='grid grid-cols-3 w-[83%] mx-auto gap-5'>
+    <div className='grid grid-cols-3 w-[90%] mx-auto gap-5'>
         {
             books?.map((book: IBookTypes)=>{ 
                 const newList = book?.wishlist?.find((newWish: IWishListType)=> newWish.wishList &&  book._id === newWish.wishListId && user.email === newWish.wishListUser )

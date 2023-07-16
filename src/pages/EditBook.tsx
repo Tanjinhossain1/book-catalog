@@ -49,7 +49,7 @@ const handleSubmit = (event: any) =>{
 
 useEffect(()=>{
     if(data){
- toast.success('Add New Books Complete!', {
+ toast.success('Book Is Update!', {
         position: "top-right",
         autoClose: 10000,
         hideProgressBar: false,
