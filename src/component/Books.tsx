@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useCreateAddToReadMutation, useCreateWishlistMutation, useDeleteWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
+import { useAddToCompleteReadMutation, useCreateAddToReadMutation, useCreateWishlistMutation, useDeleteWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
 import { IBookTypes, IReadType, IWishListType } from '@/types/book'
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -20,10 +20,9 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
     const [createWishlist,{data: wishlist}] = useCreateWishlistMutation(); 
     const [createAddToRead,{data: readStatus}] = useCreateAddToReadMutation(); 
     const [deleteWishlist,{data: deleteConfirm}] = useDeleteWishlistMutation(); 
+    const [addToCompleteRead,{data: completeReadStatus}] = useAddToCompleteReadMutation(); 
 
-    const [books,setBooks] = useState<IBookTypes[] | null>(null);
-
-    const [isWishlist, setWishlist] = useState<boolean>(false);  
+    const [books,setBooks] = useState<IBookTypes[] | null>(null);  
 
     // add wish list func 
     const handleWishlistToggle = (id: string) => {
@@ -72,6 +71,23 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
                 data: {addRead: {isRead: true, readUser: user.email, ReadBookId: id, isComplete: false}}
             }
             createAddToRead(options);
+        }else{
+            toast.error("You Are Not Authorized", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+        };
+            // add to read complete
+    const handleAddToComplete = (readBookId: string) => {
+        if(user.email){    
+            addToCompleteRead(readBookId);
         }else{
             toast.error("You Are Not Authorized", {
                 position: "top-right",
@@ -139,6 +155,21 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
             });
         }  
     },[readStatus])
+
+    useEffect(()=>{
+        if(completeReadStatus){
+            toast.success("Complete To Read ", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }  
+    },[completeReadStatus])
 
     useEffect(()=>{
         if(data?.data){
@@ -241,12 +272,12 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
                 <div className='mt-4 ml-3'>
                 {user.email === newAddReadList?.readUser && book._id === newAddReadList.ReadBookId && newAddReadList.isRead ?
                 newAddReadList.isComplete ? <button 
-                className={` items-center inline bg-green-600 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                className={` items-center inline bg-green-600 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
                > 
                   Complete
                </button>  :
                 <button 
-                onClick={()=>console.log('first')}
+                onClick={()=>handleAddToComplete(newAddReadList.ReadBookId)}
                  className={` items-center inline bg-green-600 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
                 > 
                     Read...(Complete?)

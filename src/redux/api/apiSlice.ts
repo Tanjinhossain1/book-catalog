@@ -87,6 +87,13 @@ export const api = createApi({
             query: (email) => `/addToRead/${email}`, 
             providesTags: ["addToRead"]
         }), 
+        addToCompleteRead: builder.mutation({
+            query: (id) =>({
+                url: `/addToRead/${id}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["addToRead"]
+        }),
     })
 })
 
@@ -103,6 +110,7 @@ export const {
     useDeleteWishlistMutation,
     useCreateAddToReadMutation,
     useGetAddToReadQuery,
+    useAddToCompleteReadMutation,
 } = api;
 
 
