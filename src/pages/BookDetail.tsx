@@ -105,7 +105,7 @@ export default function BookDetail() {
     }
     
   return (
-    <div>
+    <div className='mt-10'>
         {
             isLoading ? <div className='text-center'><span className="loading loading-spinner loading-lg"></span></div> :
            <div>
