@@ -19,7 +19,7 @@ const handleSubmit = (event: any) =>{
     const title = event.target.title.value;
     const author = event.target.author.value;
     const genre = event.target.genre.value;
-    const publicationDate = event.target.title.value;
+    const publicationDate = event.target.publicationDate.value;
 
     const options: IBookTypes = {
         title: title,
