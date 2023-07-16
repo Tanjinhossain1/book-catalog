@@ -24,13 +24,14 @@ const handleSubmit = (event: any) =>{
     const author = event.target.author.value;
     const genre = event.target.genre.value;
     const publicationDate = event.target.title.value;
-    if(user.email === book.email){
-        const options: IBookTypes = {
-            title: title,
+    if(user.email === book.userEmail){
+        const options = {
+           id: id,
+           data: { title: title,
             author: author,
             genre: genre,
             publicationDate: publicationDate,
-            userEmail: user.email,
+            userEmail: user.email,}
         }
         updateBook(options);
     }else{
@@ -48,7 +49,7 @@ const handleSubmit = (event: any) =>{
     }
 
 useEffect(()=>{
-    if(book){
+    if(data){
  toast.success('Add New Books Complete!', {
         position: "top-right",
         autoClose: 10000,
@@ -60,14 +61,14 @@ useEffect(()=>{
         theme: "colored",
     });
     }
-},[book]);
+},[data]);
 
   return (
     <div  
     className="max-w-md mx-auto p-6 bg-white   rounded shadow-md">
    <h2 className="text-2xl font-bold mb-6">Add a New Book</h2>
    <form onSubmit={handleSubmit} >
-     <BookForm isLoading={isLoading} />
+     <BookForm bookDetail={book} isLoading={isLoading} />
    </form>
  </div>
   )

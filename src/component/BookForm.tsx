@@ -9,9 +9,10 @@ import { useAppSelector } from "@/redux/hook";
 import { IBookTypes } from "@/types/book";
 
 interface BookFormPropsType {
-    isLoading: boolean
+    isLoading: boolean,
+    bookDetail?: IBookTypes
 }
-export default function BookForm({isLoading}: BookFormPropsType) { 
+export default function BookForm({isLoading,bookDetail}: BookFormPropsType) { 
   return (
     <div> 
         <div className="mb-4">
@@ -22,6 +23,7 @@ export default function BookForm({isLoading}: BookFormPropsType) {
             type="text"
             id="title"
             name="title" 
+            defaultValue={bookDetail?.title}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           />
@@ -34,6 +36,7 @@ export default function BookForm({isLoading}: BookFormPropsType) {
             type="text"
             id="author"
             name="author" 
+            defaultValue={bookDetail?.author}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           />
@@ -46,6 +49,7 @@ export default function BookForm({isLoading}: BookFormPropsType) {
             type="text"
             id="genre"
             name="genre" 
+            defaultValue={bookDetail?.genre}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           />
@@ -58,6 +62,7 @@ export default function BookForm({isLoading}: BookFormPropsType) {
             type="text"
             id="publicationDate"
             name="publicationDate" 
+            defaultValue={bookDetail?.publicationDate}
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
             required
           />

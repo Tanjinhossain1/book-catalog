@@ -1,18 +1,25 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useGetSingleBookQuery } from '@/redux/api/apiSlice';
-import { useAppSelector } from '@/redux/hook';
-import React from 'react'
+import { useDeleteBookMutation, useGetSingleBookQuery } from '@/redux/api/apiSlice';
+import { useAppSelector } from '@/redux/hook'; 
 import { useNavigate, useParams } from 'react-router-dom'
+import {useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
 
 export default function BookDetail() {
     const {id} = useParams();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
     const { user } = useAppSelector((state) => state.user);
     const {data: book, isLoading} = useGetSingleBookQuery(id!);
-    const EditAction = () =>{
-        console.log('first email ',user.email == book.userEMail, user.email, book.userEmail)
+    const [deleteBook,{data}] = useDeleteBookMutation();
+
+    const [deleteBookConfirmation,setDeleteBookConfirmation] = useState<boolean>(false)
+
+    const EditAction = () =>{ 
         if(user.email === book.userEmail){
             navigate(`/editBook/${id as string}`)
         }else{
@@ -28,6 +35,30 @@ export default function BookDetail() {
             });
         }
     }
+    const closeConfirmationModal = () =>{
+        setDeleteBookConfirmation(false)
+    }
+    const handleDelete = () =>{ 
+        deleteBook(id)
+        closeConfirmationModal()
+    }
+
+    useEffect(()=>{
+        if(data){
+     toast.success('Delete The Book!', {
+            position: "top-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+        navigate('/')
+        }
+    },[data])
+
   return (
     <div>
         {
@@ -47,7 +78,7 @@ export default function BookDetail() {
                     </h2>
                     <div>
                     <button onClick={EditAction} className="btn btn-outline btn-primary mt-3 mr-5">Edit</button>  
-                    <button className="btn btn-error">Delete</button> 
+                    <button onClick={()=> setDeleteBookConfirmation(true)} className="btn btn-error">Delete</button> 
                     </div>
                   </div> 
                 
@@ -80,6 +111,34 @@ export default function BookDetail() {
   </div>
 </section>
         </div>
+
+        {
+            deleteBookConfirmation &&  <div
+            className={`fixed inset-0 z-10 flex items-center justify-center transition-opacity ${
+                deleteBookConfirmation ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <div className="fixed inset-0 bg-black opacity-75"></div>
+            <div className="z-20 bg-white rounded shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+              <p className="text-gray-700 mb-4">Are you sure you want to delete this item?</p>
+              <div className="flex justify-end">
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded mr-2"
+                  onClick={closeConfirmationModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        }
     </div>
   )
 }

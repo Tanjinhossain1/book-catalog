@@ -28,7 +28,7 @@ export default function Books() {
     },[data?.data])
 
     const OnDetailPage = (id: string) =>{
-        navigate(`bookDetail/${id}`)
+        navigate(`/bookDetail/${id}`)
     }
   return (
     <div>

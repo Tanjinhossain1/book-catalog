@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { IBookTypes } from '@/types/book';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 
@@ -25,10 +27,17 @@ export const api = createApi({
             invalidatesTags: ["books"]
         }),
         updateBook: builder.mutation({
-            query: (data) =>({
-                url: `/book`,
-                method: "PUT",
+            query: ({id, data}) =>({
+                url: `/book/${id}`,
+                method: "PATCH",
                 body: data,
+            }),
+            invalidatesTags: ["books"]
+        }),
+        deleteBook: builder.mutation({
+            query: (id) =>({
+                url: `/book/${id}`,
+                method: "DELETE", 
             }),
             invalidatesTags: ["books"]
         }),
@@ -40,6 +49,7 @@ export const {
     useGetSingleBookQuery, 
     useCreateBookMutation,
     useUpdateBookMutation,
+    useDeleteBookMutation,
 } = api;
 
 
