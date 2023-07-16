@@ -4,10 +4,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useCreateReviewMutation, useCreateWishlistMutation, useGetBooksQuery, useGetWishListQuery } from '@/redux/api/apiSlice'
+import { useCreateWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
 import { IBookTypes, IWishListType } from '@/types/book'
 import { useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaHeart, FaHeartbeat } from "react-icons/fa";
 import { useAppSelector } from '@/redux/hook';
 import { toast } from 'react-toastify';
@@ -15,18 +15,16 @@ import { toast } from 'react-toastify';
 export default function Books() {
     const { data } = useGetBooksQuery(""); 
     const navigate = useNavigate();
-    const {user} = useAppSelector(state => state.user)
-    const [books,setBooks] = useState<IBookTypes[] | null>(null);
-    const [isWishlist, setWishlist] = useState<boolean>(false); 
-    const [wishlistId,setWishlistId] = useState<string>("")
 
-    const {data: wishListDetail} = useGetWishListQuery(wishlistId);
-
+    const {user} = useAppSelector(state => state.user);
     const [createWishlist,{data: wishlist}] = useCreateWishlistMutation(); 
 
+    const [books,setBooks] = useState<IBookTypes[] | null>(null);
+    const [isWishlist, setWishlist] = useState<boolean>(false);  
+
+
     const handleWishlistToggle = (id: string) => {
-    if(user.email){ 
-        setWishlistId(id)
+    if(user.email){  
         setWishlist(!isWishlist);
         const options = {
             id: id,
@@ -135,8 +133,7 @@ export default function Books() {
         </div>
     <div className='grid grid-cols-3 w-[80%] mx-auto gap-5'>
         {
-            books?.map((book: IBookTypes)=>{
-                const wishlists = wishListDetail?.wishlist?.find((e: IWishListType) => e.wishList && e.wishListId === book._id);
+            books?.map((book: IBookTypes)=>{ 
                 const newList = book?.wishlist?.find((newWish: IWishListType)=> newWish.wishList &&  book._id === newWish.wishListId && user.email === newWish.wishListUser )
                 return(
                     <div className="bg-white px-10 py-3 rounded-lg shadow-md border-2 ">
@@ -147,47 +144,27 @@ export default function Books() {
                       <br />
                       <span className='font-bold text-gray-600'>Publication Date: </span> {book.publicationDate}
                     </h2> 
-                    <button onClick={() =>OnDetailPage(book._id as string)}  className="btn btn-outline btn-primary mt-3">View Detail</button> 
-                    {/* { */}
-                         {/* newList ? 
-                         wishListDetail?.wishlist?.map((wish: IWishListType )=>{ 
-                             return( */}
-                                <button
-                                onClick={() => handleWishlistToggle(book._id as string)}
-                                className={`flex items-center ${
-                               user.email === newList?.wishListUser && book._id === newList.wishListId && newList.wishList ? 'bg-red-500' : 'bg-gray-500'
-                                } hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
-                              >
-                                {user.email === newList?.wishListUser && newList.wishList  ? (
-                                  <>
-                                    <FaHeartbeat   />
-                                  </>
-                                ) : (
-                                  <>
-                                <FaHeart  />
-                                  </>
-                                )}
-                              </button>
-                             {/* )
-                         }) 
-                         :  <button
-                         onClick={()=>handleWishlistToggle(book._id as string)}
-                         className={`flex items-center ${
-                           isWishlist ? 'bg-red-500' : 'bg-gray-300'
-                         } hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
-                       >
-                         {isWishlist ?(
-                                   <>
-                                     <FaHeartbeat   />
-                                   </>
-                                 ) : (
-                                   <>
-                                 <FaHeart  />
-                                   </>
-                                 )} 
-                       </button>
-                     } */}
+                    <div className=''>
+
+                    <button onClick={() =>OnDetailPage(book._id as string)}  className="btn btn-outline btn-primary mr-3 mt-3">View Detail</button> 
+                    {user.email === newList?.wishListUser && book._id === newList.wishListId && newList.wishList ?
+                     <button
+                     onClick={() => handleWishlistToggle(book._id as string)}
+                     className={` items-center inline bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                   > 
+                         <FaHeartbeat   /> 
+                   </button>  
+                     :
+                  <button
+                  onClick={() => handleWishlistToggle(book._id as string)}
+                  className={`  items-center inline bg-gray-500  hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                > 
+                  <FaHeart  /> 
+                </button>  
+                    }
+                    </div>
                   
+                               
                   </div>
                 ) 
             })
