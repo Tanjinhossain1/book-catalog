@@ -39,7 +39,21 @@ export default function BookDetail() {
         setDeleteBookConfirmation(false)
     }
     const handleDelete = () =>{ 
-        deleteBook(id)
+        console.log('first  ', user.email === book.userEmail, user.email , book.userEmail)
+        if(user.email === book.userEmail){
+            deleteBook(id)
+        }else{
+            toast.error("This Is Not Your Book. Make First ", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
         closeConfirmationModal()
     }
 
