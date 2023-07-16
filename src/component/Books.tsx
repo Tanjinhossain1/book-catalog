@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useCreateWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
+import { useCreateWishlistMutation, useDeleteWishlistMutation, useGetBooksQuery } from '@/redux/api/apiSlice'
 import { IBookTypes, IWishListType } from '@/types/book'
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
 
     const {user} = useAppSelector(state => state.user);
     const [createWishlist,{data: wishlist}] = useCreateWishlistMutation(); 
+    const [deleteWishlist,{data: deleteConfirm}] = useDeleteWishlistMutation(); 
 
     const [books,setBooks] = useState<IBookTypes[] | null>(null);
 
@@ -25,8 +26,7 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
 
 
     const handleWishlistToggle = (id: string) => {
-    if(user.email){  
-        setWishlist(!isWishlist);
+    if(user.email){   
         const options = {
             id: id,
             data: {wishlist: {wishList: true, wishListUser: user.email, wishListId: id}}
@@ -45,6 +45,23 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
         });
     }
     };
+
+    const handleRemoveWishlistToggle = (wishListId: string) => {
+        if(user.email){    
+            deleteWishlist(wishListId);
+        }else{
+            toast.error("You Are Not Authorized", {
+                position: "top-right",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
+        };
 
     const OnSearchBooks =(value: string, mode: "search" | "genre filter" | "year filter") =>{
         const searchValue: string = value.toLowerCase();
@@ -69,6 +86,21 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
             });
         }  
     },[wishlist])
+    
+    useEffect(()=>{
+        if(deleteConfirm){
+            toast.success("Delete Wish List", {
+                position: "top-center",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }  
+    },[deleteConfirm])
 
     useEffect(()=>{
         if(data?.data){
@@ -79,7 +111,7 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
     const OnDetailPage = (id: string) =>{
         navigate(`/bookDetail/${id}`)
     }
-    console.log(' books  ', books)
+    console.log(' books  ', books);
   return (
     <div>
   <form className=" mx-auto w-[80%] gap-10 grid grid-cols-3  px-4 mb-1  ">
@@ -151,7 +183,7 @@ export default function Books({bookDetail}: {bookDetail?: IBookTypes[]}) {
                     <button onClick={() =>OnDetailPage(book._id as string)}  className="btn btn-outline btn-primary mr-3 mt-3">View Detail</button> 
                     {user.email === newList?.wishListUser && book._id === newList.wishListId && newList.wishList ?
                      <button
-                     onClick={() => handleWishlistToggle(book._id as string)}
+                     onClick={() => handleRemoveWishlistToggle(newList?.wishListId)}
                      className={` items-center inline bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
                    > 
                          <FaHeartbeat   /> 

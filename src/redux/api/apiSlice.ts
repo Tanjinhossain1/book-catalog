@@ -67,6 +67,13 @@ export const api = createApi({
             query: (email) => `/wishlist/${email}`, 
             providesTags: ["wishlist"]
         }), 
+        deleteWishlist: builder.mutation({
+            query: (wishlistId) =>({
+                url: `/wishlist/${wishlistId}`,
+                method: "DELETE",  
+            }),
+            invalidatesTags: ["wishlist"]
+        }),
     })
 })
 
@@ -80,6 +87,7 @@ export const {
     useGetReviewQuery,
     useCreateWishlistMutation,
     useGetWishListQuery,
+    useDeleteWishlistMutation,
 } = api;
 
 
