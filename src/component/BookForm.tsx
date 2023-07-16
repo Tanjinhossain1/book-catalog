@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import {useEffect} from "react"
-import {toast} from "react-toastify"
-import { useCreateBookMutation } from '@/redux/api/apiSlice' 
-import { useAppSelector } from "@/redux/hook";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */ 
 import { IBookTypes } from "@/types/book";
 
 interface BookFormPropsType {

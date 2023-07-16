@@ -9,12 +9,13 @@ export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl : "http://localhost:5000"}),
     tagTypes: [
         "books",
-        "reviews"
+        "reviews",
+        "wishlist"
     ],
     endpoints: (builder) =>({
         getBooks : builder.query({
             query: () => `/books`, 
-            providesTags: ["books"]
+            providesTags: ["books","wishlist"]
         }),
         getSingleBook: builder.query({
             query: (id: string) => `/book/${id}`
@@ -54,6 +55,18 @@ export const api = createApi({
             query: (id) => `/review/${id}`, 
             providesTags: ["reviews"]
         }), 
+        createWishlist: builder.mutation({
+            query: ({id,data}) =>({
+                url: `/wishlist/${id}`,
+                method: "POST", 
+                body: data
+            }),
+            invalidatesTags: ["wishlist"]
+        }),
+        getWishList: builder.query({
+            query: (id) => `/wishlist/${id}`, 
+            providesTags: ["wishlist"]
+        }), 
     })
 })
 
@@ -65,6 +78,8 @@ export const {
     useDeleteBookMutation,
     useCreateReviewMutation,
     useGetReviewQuery,
+    useCreateWishlistMutation,
+    useGetWishListQuery,
 } = api;
 
 

@@ -90,9 +90,20 @@ export default function BookDetail() {
           data: {reviews: {review: review, user: user.email}},
         }
         createReview(options);
+      }else{
+        toast.error('You Are Not Authorized. Login First!', {
+          position: "top-right",
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+      });
       }
     }
- console.log('first  reviews ', reviews)
+    
   return (
     <div>
         {

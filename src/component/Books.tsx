@@ -1,18 +1,52 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useGetBooksQuery } from '@/redux/api/apiSlice'
-import { IBookTypes } from '@/types/book'
+import { useCreateReviewMutation, useCreateWishlistMutation, useGetBooksQuery, useGetWishListQuery } from '@/redux/api/apiSlice'
+import { IBookTypes, IWishListType } from '@/types/book'
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { FaHeart, FaHeartbeat } from "react-icons/fa";
+import { useAppSelector } from '@/redux/hook';
+import { toast } from 'react-toastify';
 
 export default function Books() {
     const { data } = useGetBooksQuery(""); 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const {user} = useAppSelector(state => state.user)
     const [books,setBooks] = useState<IBookTypes[] | null>(null);
-    
+    const [isWishlist, setWishlist] = useState<boolean>(false); 
+    const [wishlistId,setWishlistId] = useState<string>("")
+
+    const {data: wishListDetail} = useGetWishListQuery(wishlistId);
+
+    const [createWishlist,{data: wishlist}] = useCreateWishlistMutation(); 
+
+    const handleWishlistToggle = (id: string) => {
+    if(user.email){ 
+        setWishlistId(id)
+        setWishlist(!isWishlist);
+        const options = {
+            id: id,
+            data: {wishlist: {wishList: true, wishListUser: user.email, wishListId: id}}
+        }
+        createWishlist(options);
+    }else{
+        toast.error("You Are Not Authorized", {
+            position: "top-right",
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+    }
+    };
+
     const OnSearchBooks =(value: string, mode: "search" | "genre filter" | "year filter") =>{
         const searchValue: string = value.toLowerCase();
 
@@ -20,6 +54,21 @@ export default function Books() {
 
         setBooks(filterableBooks);
     }
+
+    useEffect(()=>{
+        if(wishlist){
+            toast.success("Added WishList", {
+                position: "top-center",
+                autoClose: 10000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }  
+    },[wishlist])
 
     useEffect(()=>{
         if(data?.data){
@@ -30,6 +79,7 @@ export default function Books() {
     const OnDetailPage = (id: string) =>{
         navigate(`/bookDetail/${id}`)
     }
+    console.log(' data  ', data)
   return (
     <div>
   <form className=" mx-auto w-[80%] gap-10 grid grid-cols-3  px-4 mb-1  ">
@@ -81,13 +131,15 @@ export default function Books() {
         <div className=' text-end w-[90%] mb-1'>  
         <Link to="/addNewBook"> 
         <button className="btn btn-primary mt-3">Add New</button> 
-        </Link>
+        </Link> 
         </div>
     <div className='grid grid-cols-3 w-[80%] mx-auto gap-5'>
         {
             books?.map((book: IBookTypes)=>{
+                const wishlists = wishListDetail?.wishlist?.find((e: IWishListType) => e.wishList && e.wishListId === book._id);
+                const newList = book?.wishlist?.find((newWish: IWishListType)=> newWish.wishList &&  book._id === newWish.wishListId && user.email === newWish.wishListUser )
                 return(
-                    <div onClick={() =>OnDetailPage(book._id as string)} className="bg-white px-10 py-3 rounded-lg shadow-md border-2 ">
+                    <div className="bg-white px-10 py-3 rounded-lg shadow-md border-2 ">
                     <h1 className=""><span className="text-xl font-bold text-black ">Name:</span> {book.title}</h1>
                     <h3 className="text-xs uppercase"><span className='font-bold text-gray-600'>Author: </span> {book.author}</h3>
                     <h2 className="tracking-wide">
@@ -95,7 +147,47 @@ export default function Books() {
                       <br />
                       <span className='font-bold text-gray-600'>Publication Date: </span> {book.publicationDate}
                     </h2> 
-                    <button className="btn btn-outline btn-primary mt-3">View Detail</button> 
+                    <button onClick={() =>OnDetailPage(book._id as string)}  className="btn btn-outline btn-primary mt-3">View Detail</button> 
+                    {/* { */}
+                         {/* newList ? 
+                         wishListDetail?.wishlist?.map((wish: IWishListType )=>{ 
+                             return( */}
+                                <button
+                                onClick={() => handleWishlistToggle(book._id as string)}
+                                className={`flex items-center ${
+                               user.email === newList?.wishListUser && book._id === newList.wishListId && newList.wishList ? 'bg-red-500' : 'bg-gray-500'
+                                } hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                              >
+                                {user.email === newList?.wishListUser && newList.wishList  ? (
+                                  <>
+                                    <FaHeartbeat   />
+                                  </>
+                                ) : (
+                                  <>
+                                <FaHeart  />
+                                  </>
+                                )}
+                              </button>
+                             {/* )
+                         }) 
+                         :  <button
+                         onClick={()=>handleWishlistToggle(book._id as string)}
+                         className={`flex items-center ${
+                           isWishlist ? 'bg-red-500' : 'bg-gray-300'
+                         } hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300 focus:outline-none focus:ring`}
+                       >
+                         {isWishlist ?(
+                                   <>
+                                     <FaHeartbeat   />
+                                   </>
+                                 ) : (
+                                   <>
+                                 <FaHeart  />
+                                   </>
+                                 )} 
+                       </button>
+                     } */}
+                  
                   </div>
                 ) 
             })
