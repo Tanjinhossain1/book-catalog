@@ -53,13 +53,7 @@ export default function SignUp() {
          <div className="relative flex flex-col justify-center h-screen overflow-hidden">
         <div className="w-full p-6 m-auto bg-purple-500  rounded-md shadow-md lg:max-w-xl">
             <h1 className="text-3xl font-semibold text-center text-white">SIGN UP</h1>
-            <form onSubmit={SubmitForm} className="space-y-4 "> 
-                <div>
-                    <label className="label">
-                        <span className="text-base label-text text-white">Name</span>
-                    </label>
-                    <input required type="text" name="name" placeholder="Name" className="w-full input input-bordered input-primary" />
-                </div>
+            <form onSubmit={SubmitForm} className="space-y-4 ">  
                 <div>
                     <label className="label">
                         <span className="text-base label-text text-white">Email</span>
